@@ -94,13 +94,3 @@ Linux 사용을 가정하여 코드를 작성하였으며, 만약 다른 환경�
 ```
 - 웹페이지 분석 모델은 이미지를 입력으로 받아 결과 이미지와 분석 결과를 출력한다.
 - 원본 이미지의 주소는 ```image```, 결과 이미지의 주소는 ```result_image```로 표시된다.
-
-## How to use
-- 웹페이지 이미지를 분석할 수 있는 페이지가 존재한다.
-- 접속 URL : **http://{SERVER_IP}:{WEB_PORT}/image**
-![alt text](docs/inference/webui_inference.jpg)
-- 해당 페이지 기능
-  - 이미지 입력 : 웹페이지 이미지를 입력하여 지정된 웹 객체("text", "image", "button", "heading", "link", "input")를 찾고 추론 이미지를 보여준다.
-    - Confidence Threshold : Threshold 값을 설정하여 일정 값 이상의 박스만 나오게 확인 가능
-  - 이미지 확인 : 입력된 이미지에 따라 추론된 이미지(전체 클래스 포함, 각 클래스별 이미지)를 확인 가능하다.
-  - 이미지 저장 : 추론된 이미지를 저장할 수 있다.

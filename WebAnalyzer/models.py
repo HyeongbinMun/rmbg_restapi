@@ -19,7 +19,9 @@ class ResultImage(models.Model):
 
 class ImageModel(models.Model):
     image = models.ImageField(upload_to=filename.default)
-    conf_threshold = models.FloatField(default=0.1)
+    mask_blur = models.IntegerField(default=0)
+    mask_offset = models.IntegerField(default=0)
+    invert_output = models.BooleanField(default=False)
     token = models.AutoField(primary_key=True)
     uploaded_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
@@ -30,7 +32,7 @@ class ImageModel(models.Model):
 
         task_result = app.send_task(
             name='WebAnalyzer.tasks.analyzer_by_image',
-            args=[self.image.path, self.conf_threshold],
+            args=[self.image.path, self.mask_blur, self.mask_offset, self.invert_output],
             exchange='WebAnalyzer',
             routing_key='webanalyzer_tasks',
         )

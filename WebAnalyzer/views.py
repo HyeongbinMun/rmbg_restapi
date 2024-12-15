@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 from django.views.generic import TemplateView
 
 from WebAnalyzer.models import ImageModel, ResultImage
+from rest_framework.exceptions import ValidationError
 from WebAnalyzer.serializers import ImageSerializer
 from rest_framework.response import Response
 from rest_framework import viewsets
@@ -36,17 +37,18 @@ class ImageViewSet(viewsets.ModelViewSet):
             return Response({'error': 'Image file is required'}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
-            conf_threshold = float(request.data.get('conf_thresh', 0.1))
-        except ValueError:
-            return Response({'error': 'Invalid conf_thresh value'}, status=status.HTTP_400_BAD_REQUEST)
+            mask_blur = int(request.data.get('mask_blur', 0))
+            mask_offset = int(request.data.get('mask_offset', 0))
+            invert_output = request.data.get('invert_output', 'false').lower() == 'true'
+        except ValueError as e:
+            raise ValidationError({'error': 'Invalid parameter value', 'details': str(e)})
 
-        image_instance = ImageModel(image=image, conf_threshold=conf_threshold)
+        image_instance = ImageModel(image=image, mask_blur=mask_blur, mask_offset=mask_offset, invert_output=invert_output)
         image_instance.save()
 
         return Response({
             'message': 'Image uploaded and processing started!',
             'image_token': image_instance.token,
-            'conf_thresh': conf_threshold,
         }, status=status.HTTP_201_CREATED)
 
 class ImageComparisonView(TemplateView):

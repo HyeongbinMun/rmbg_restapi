@@ -32,7 +32,12 @@ def module_load_init(**__):
 
 
 @app.task(acks_late=True, queue='WebAnalyzer', routing_key='webanalyzer_tasks')
-def analyzer_by_image(file_path, conf_thresh=0.1):
+def analyzer_by_image(file_path, mask_blur=0, mask_offset=0, invert_output=False):
     image = cv2.imread(file_path)
-    out_images = analyzer.inference(image)
+    parameters = {
+        'mask_blur': mask_blur,
+        'mask_offset': mask_offset,
+        'invert_output': invert_output
+    }
+    out_images = analyzer.inference(image, parameters)
     return out_images
